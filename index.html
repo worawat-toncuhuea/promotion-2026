@@ -5,8 +5,9 @@
 #nnpromo .bar{position:sticky;top:0;z-index:5;background:#fff;padding:12px 0;border-bottom:1px solid #e5e7eb}
 #nnpromo .search{width:100%;font-size:18px;padding:12px 16px;border:2px solid #d1d5db;border-radius:10px;outline:none}
 #nnpromo .search:focus{border-color:#dc2626}
-#nnpromo .chips{display:flex;flex-wrap:nowrap;align-items:center;gap:6px;margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}#nnpromo .chips::-webkit-scrollbar{display:none}
-#nnpromo .chip{flex:0 0 auto;white-space:nowrap;border:1px solid #d1d5db;background:#fff;border-radius:999px;padding:5px 12px;font-size:14px;cursor:pointer;color:#374151;font-family:inherit}
+#nnpromo .chips{display:flex;flex-wrap:nowrap;align-items:center;gap:4px;margin-top:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}#nnpromo .chips::-webkit-scrollbar{display:none}
+#nnpromo .chip{flex:0 0 auto;white-space:nowrap;border:1px solid #d1d5db;background:#fff;border-radius:999px;padding:4px 6px;font-size:12.5px;cursor:pointer;color:#374151;font-family:inherit}
+#nnpromo.narrow .chips[data-k=p]{display:none}#nnpromo.narrow .psel{display:block}
 #nnpromo .chip.on{background:#dc2626;border-color:#dc2626;color:#fff}
 #nnpromo .psel{display:none;width:100%;margin-top:6px;font-size:14px;padding:7px 10px;border:1px solid #d1d5db;border-radius:8px;background:#fff;color:#374151;font-family:inherit}#nnpromo .lbl{flex:0 0 auto;font-size:13px;color:#6b7280;margin-right:2px}
 #nnpromo .count{font-size:13px;color:#6b7280;margin-top:8px}
@@ -22,12 +23,12 @@
 #nnpromo .grid div:nth-child(10n+6),#nnpromo .grid div:nth-child(10n+7),#nnpromo .grid div:nth-child(10n+8),#nnpromo .grid div:nth-child(10n+9),#nnpromo .grid div:nth-child(10n+10){background:#f9fafb}
 #nnpromo mark{background:#fde047;padding:0}
 #nnpromo .empty{text-align:center;padding:40px;color:#6b7280}
-@media(max-width:640px){#nnpromo .chips{gap:4px}#nnpromo .chip{padding:4px 10px;font-size:13px}#nnpromo .lbl{font-size:12px}#nnpromo .chips[data-k=p]{display:none}#nnpromo .psel{display:block}#nnpromo .chip .d{display:none}#nnpromo .search{font-size:16px;padding:10px 12px}#nnpromo .grid{grid-template-columns:repeat(3,1fr)}#nnpromo .grid div{font-size:13px;padding:8px 6px}#nnpromo .grid div{background:#fff!important}}
+@media(max-width:640px){#nnpromo .chips{gap:4px}#nnpromo .chip{padding:4px 10px;font-size:13px}#nnpromo .lbl{font-size:12px}#nnpromo .chip .d{display:none}#nnpromo .search{font-size:16px;padding:10px 12px}#nnpromo .grid{grid-template-columns:repeat(3,1fr)}#nnpromo .grid div{font-size:13px;padding:8px 6px}#nnpromo .grid div{background:#fff!important}}
 </style>
 <div class="bar">
 <input class="search" type="search" placeholder="🔍 ค้นหา Part Number เช่น A-1045, C-1011, SFA 1050..." autocomplete="off">
 <div class="chips" data-k="b"><span class="lbl">ยี่ห้อ:</span></div>
-<div class="chips" data-k="p"><span class="lbl">โปรโมชั่น:</span></div><select class="psel" aria-label="โปรโมชั่น"></select>
+<div class="chips" data-k="p"></div><select class="psel" aria-label="โปรโมชั่น"></select>
 <div class="count"></div>
 </div>
 <div class="out"></div>
@@ -42,8 +43,8 @@ keys.sort(function(a,b){a=a.split('/').map(Number);b=b.split('/').map(Number);va
 var st={b:'all',p:'all'};
 function chips(k,opts){var c=root.querySelector('.chips[data-k='+k+']');opts.forEach(function(o){var e=document.createElement('button');e.className='chip'+(o[0]=='all'?' on':'');e.innerHTML=o[1];e.onclick=function(){st[k]=o[0];[].forEach.call(c.querySelectorAll('.chip'),function(x){x.classList.remove('on')});e.classList.add('on');if(k=='p')ps.value=o[0];render()};c.appendChild(e)})}
 chips('b',[['all','ทั้งหมด'],['S','Sakura'],['F','Sure Filter']]);
-chips('p',[['all','ทั้งหมด']].concat(keys.map(function(k){var a=k.split('/');return[k,'<span class="d">ซื้อ </span>'+a[0]+'<span class="d"> </span>แถม<span class="d"> </span>'+a[1]]})));
-var ps=root.querySelector('.psel');[['all','โปรโมชั่น: ทั้งหมด']].concat(keys.map(function(k){var a=k.split('/');return[k,'ซื้อ '+a[0]+' แถม '+a[1]]})).forEach(function(o){var op=document.createElement('option');op.value=o[0];op.textContent=o[1];ps.appendChild(op)});
+chips('p',[['all','ทุกโปร']].concat(keys.map(function(k){var a=k.split('/');return[k,code(+a[0],+a[1])+'&thinsp;:&thinsp;ซื้อ '+a[0]+' แถม '+a[1]]})));
+var ps=root.querySelector('.psel');[['all','โปรโมชั่น: ทั้งหมด']].concat(keys.map(function(k){var a=k.split('/');return[k,code(+a[0],+a[1])+' : ซื้อ '+a[0]+' แถม '+a[1]]})).forEach(function(o){var op=document.createElement('option');op.value=o[0];op.textContent=o[1];ps.appendChild(op)});
 ps.onchange=function(){st.p=ps.value;var c=root.querySelector('.chips[data-k=p]');[].forEach.call(c.querySelectorAll('.chip'),function(x,i){x.classList.toggle('on',i==ps.selectedIndex)});render()};
 function norm(s){return s.toUpperCase().replace(/[\s\-]/g,'')}
 function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;')}
@@ -53,6 +54,8 @@ function render(){var t=norm(q.value.trim()),h='',tot=0;
 var items=D.filter(function(d){return d[1]==br&&d[2]==a[0]&&d[3]==a[1]&&(!t||norm(d[0]).indexOf(t)>=0)});if(!items.length)return;tot+=items.length;
 h+='<div class="grp"><div class="gh"><b>โปรโมชั่น '+code(+a[0],+a[1])+'</b><span class="tag">ซื้อ '+a[0]+' แถม '+a[1]+'</span><span class="br '+br+'">'+BN[br]+'</span><span class="n">'+items.length+' รายการ</span></div><div class="grid">'+items.map(function(d){return'<div>'+hl(d[0],t)+'</div>'}).join('')+'</div></div>'})});
 out.innerHTML=h||'<div class="empty">ไม่พบ Part Number นี้ในรายการโปรโมชั่น</div>';cnt.textContent='พบ '+tot+' รายการ';}
+function fit(){root.classList.remove('narrow');var c=root.querySelector('.chips[data-k=p]');if(c.scrollWidth>c.clientWidth+1)root.classList.add('narrow')}
+window.addEventListener('resize',fit);fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
 q.addEventListener('input',render);render();
 })();
 </script>
